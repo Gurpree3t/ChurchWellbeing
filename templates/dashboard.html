@@ -1,0 +1,224 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!-- Hero Banner -->
+
+<div class="hero">
+
+    <h1>🏆 Church Wellbeing Challenge</h1>
+
+    <p>
+        Healthy Body • Strong Faith • Strong Fellowship
+    </p>
+
+</div>
+
+<!-- Statistics -->
+
+<div class="row mt-4 g-4">
+
+    <div class="col-lg-4 col-md-6">
+
+        <div class="stat-card">
+
+            <div class="icon">
+                👥
+            </div>
+
+            <div>
+
+                <h2>{{ total_members }}</h2>
+
+                <span>Total Members</span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-4 col-md-6">
+
+        <div class="stat-card">
+
+            <div class="icon">
+                👣
+            </div>
+
+            <div>
+
+                <h2>{{ "{:,}".format(total_steps) }}</h2>
+
+                <span>Total Steps</span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-4 col-md-12">
+
+        <div class="stat-card">
+
+            <div class="icon">
+                ⭐
+            </div>
+
+            <div>
+
+                <h2>{{ total_points }}</h2>
+
+                <span>Total Points</span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Top 3 -->
+
+<h2 class="section-title mt-5">
+
+🏅 Top Performers
+
+</h2>
+
+<div class="row mt-3">
+
+    {% if top3|length > 0 %}
+    <div class="col-md-4">
+
+        <div class="podium gold">
+
+            <div class="medal">🥇</div>
+
+            <h2>{{ top3[0].Name }}</h2>
+
+            <p>{{ top3[0].Total }} Points</p>
+
+        </div>
+
+    </div>
+    {% endif %}
+
+    {% if top3|length > 1 %}
+    <div class="col-md-4">
+
+        <div class="podium silver">
+
+            <div class="medal">🥈</div>
+
+            <h2>{{ top3[1].Name }}</h2>
+
+            <p>{{ top3[1].Total }} Points</p>
+
+        </div>
+
+    </div>
+    {% endif %}
+
+    {% if top3|length > 2 %}
+    <div class="col-md-4">
+
+        <div class="podium bronze">
+
+            <div class="medal">🥉</div>
+
+            <h2>{{ top3[2].Name }}</h2>
+
+            <p>{{ top3[2].Total }} Points</p>
+
+        </div>
+
+    </div>
+    {% endif %}
+
+</div>
+
+<!-- Leaderboard -->
+
+<div class="leaderboard mt-5">
+
+    <div class="leaderboard-header">
+
+    <div>
+
+        <h2>🏆 Leaderboard</h2>
+
+        <small class="text-muted">
+            Last Updated: {{ last_updated }}
+        </small>
+
+    </div>
+
+    <input
+        type="text"
+        id="searchInput"
+        class="form-control"
+        placeholder="🔍 Search member..."
+    >
+
+</div>
+
+    <table class="table align-middle" id="leaderboardTable">
+
+        <thead>
+
+        <tr>
+
+            <th width="80">Rank</th>
+
+            <th>Name</th>
+
+            <th width="150">Points</th>
+
+        </tr>
+
+        </thead>
+
+        <tbody>
+
+        {% for person in leaderboard %}
+
+        <tr>
+
+            <td>
+
+                {% if person.Rank == 1 %}
+                    🥇
+                {% elif person.Rank == 2 %}
+                    🥈
+                {% elif person.Rank == 3 %}
+                    🥉
+                {% else %}
+                    {{ person.Rank }}
+                {% endif %}
+
+            </td>
+
+            <td>{{ person.Name }}</td>
+
+            <td>
+
+                <strong>{{ person.Total }}</strong>
+
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+
+
+{% endblock %}

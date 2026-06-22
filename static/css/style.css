@@ -324,6 +324,432 @@ Leaderboard
 }
 
 /* ==========================================
+Badges
+========================================== */
+
+.badges-section {
+    background: white;
+    border-radius: 22px;
+    padding: 30px;
+    box-shadow: 0 12px 30px rgba(0,0,0,.08);
+}
+
+.badge-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 16px;
+}
+
+.badge-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    border-radius: 50px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: .3s;
+    cursor: default;
+    user-select: none;
+}
+
+.badge-pill.earned {
+    background: linear-gradient(135deg, #2563eb, #0ea5e9);
+    color: white;
+    box-shadow: 0 6px 18px rgba(37,99,235,.3);
+}
+
+.badge-pill.earned:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 24px rgba(37,99,235,.4);
+}
+
+.badge-pill.locked {
+    background: #f1f5f9;
+    color: #94a3b8;
+    border: 2px dashed #cbd5e1;
+}
+
+.badge-pill .badge-icon {
+    font-size: 20px;
+}
+
+/* ==========================================
+My Rank Card
+========================================== */
+
+.my-rank-bar {
+    background: linear-gradient(135deg, #2563eb, #0ea5e9);
+    border-radius: 22px;
+    padding: 28px 32px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    box-shadow: 0 12px 30px rgba(37,99,235,.35);
+    flex-wrap: wrap;
+}
+
+.my-rank-bar .rank-avatar {
+    font-size: 48px;
+    line-height: 1;
+}
+
+.my-rank-bar .rank-info {
+    flex: 1;
+}
+
+.my-rank-bar .rank-info .rank-name {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.my-rank-bar .rank-stats {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+}
+
+.my-rank-bar .rank-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(255,255,255,.15);
+    border-radius: 14px;
+    padding: 12px 20px;
+    min-width: 90px;
+}
+
+.my-rank-bar .rank-stat .label {
+    font-size: 12px;
+    opacity: .85;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+}
+
+.my-rank-bar .rank-stat .value {
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.my-rank-bar .rank-move {
+    font-size: 14px;
+    font-weight: 600;
+    background: rgba(255,255,255,.2);
+    border-radius: 50px;
+    padding: 6px 14px;
+    white-space: nowrap;
+}
+
+.my-rank-bar .rank-move.up {
+    color: #86efac;
+}
+
+.my-rank-bar .rank-move.down {
+    color: #fca5a5;
+}
+
+.my-rank-bar .rank-move.same {
+    color: #fde68a;
+}
+
+/* My Rank search on dashboard */
+.my-rank-search {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+}
+
+.my-rank-search input {
+    flex: 1;
+    min-width: 180px;
+    border-radius: 12px;
+    border: 2px solid #e2e8f0;
+    padding: 10px 16px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: .25s;
+}
+
+.my-rank-search input:focus {
+    border-color: #2563eb;
+}
+
+.my-rank-search button {
+    border-radius: 12px;
+    padding: 10px 20px;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+#myRankResult {
+    display: none;
+}
+
+/* ==========================================
+Feature Panels
+========================================== */
+
+.feature-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 22px;
+}
+
+.panel {
+    background: white;
+    border-radius: 22px;
+    padding: 26px;
+    box-shadow: 0 12px 30px rgba(0,0,0,.08);
+}
+
+.panel-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 18px;
+}
+
+.panel-heading h2 {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.panel-heading i {
+    color: #2563eb;
+    font-size: 22px;
+}
+
+.notification-list {
+    display: grid;
+    gap: 12px;
+}
+
+.notification-item {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    border-radius: 16px;
+    padding: 14px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+}
+
+.notification-item strong,
+.notification-item small {
+    display: block;
+}
+
+.notification-item small {
+    color: #64748b;
+    margin-top: 2px;
+}
+
+.notice-icon {
+    font-size: 24px;
+}
+
+.notification-item.warning {
+    border-color: #fed7aa;
+    background: #fff7ed;
+}
+
+.notification-item.success {
+    border-color: #bbf7d0;
+    background: #f0fdf4;
+}
+
+.notification-item.rank {
+    border-color: #bfdbfe;
+    background: #eff6ff;
+}
+
+.ai-panel {
+    background: linear-gradient(135deg,#111827,#1f2937);
+    color: white;
+}
+
+.ai-panel .panel-heading i,
+.ai-panel p {
+    color: #dbeafe;
+}
+
+.ai-panel h3 {
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.coach-tip {
+    background: rgba(255,255,255,.12);
+    border: 1px solid rgba(255,255,255,.16);
+    border-radius: 14px;
+    padding: 12px 14px;
+    font-weight: 600;
+}
+
+.report-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.report-actions .btn,
+.prayer-form .btn {
+    border-radius: 12px;
+    font-weight: 600;
+}
+
+.prayer-form {
+    display: grid;
+    gap: 12px;
+}
+
+.prayer-form input,
+.prayer-form textarea {
+    border: 2px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 12px 14px;
+    font-family: 'Poppins', sans-serif;
+    outline: none;
+    resize: vertical;
+}
+
+.prayer-form input:focus,
+.prayer-form textarea:focus {
+    border-color: #2563eb;
+}
+
+.prayer-wall {
+    max-height: 430px;
+    overflow: auto;
+}
+
+.wall-item {
+    border-bottom: 1px solid #e2e8f0;
+    padding: 0 0 14px;
+    margin-bottom: 14px;
+}
+
+.wall-item:last-child {
+    border-bottom: 0;
+    margin-bottom: 0;
+}
+
+.wall-item p {
+    margin: 5px 0;
+}
+
+.wall-item small {
+    color: #64748b;
+}
+
+.event-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.event-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 16px;
+    min-height: 170px;
+}
+
+.event-card span {
+    color: #2563eb;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.event-card h3 {
+    font-size: 17px;
+    font-weight: 700;
+    margin: 8px 0;
+}
+
+.event-card strong {
+    display: block;
+    margin-bottom: 8px;
+}
+
+.event-card p {
+    color: #64748b;
+    font-size: 14px;
+    margin: 0;
+}
+
+/* ==========================================
+Profile
+========================================== */
+
+.profile-card {
+    background: white;
+    border-radius: 22px;
+    padding: 34px;
+    text-align: center;
+    box-shadow: 0 12px 30px rgba(0,0,0,.08);
+}
+
+.profile-photo-wrap {
+    display: flex;
+    justify-content: center;
+}
+
+.profile-photo {
+    width: 132px;
+    height: 132px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 5px solid #eff6ff;
+    box-shadow: 0 10px 24px rgba(37,99,235,.22);
+}
+
+.profile-photo.placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #eff6ff;
+    color: #2563eb;
+    font-size: 68px;
+}
+
+.photo-upload {
+    margin-top: 16px;
+}
+
+.photo-upload input {
+    display: none;
+}
+
+.report-page .report-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.report-page .report-title h1 {
+    font-weight: 700;
+    margin: 0;
+}
+
+.report-page .report-title p {
+    margin: 5px 0 0;
+    color: #64748b;
+}
+
+/* ==========================================
 Footer
 ========================================== */
 
@@ -373,6 +799,11 @@ align-items:stretch;
 
 width:100%;
 
+}
+
+.feature-grid,
+.event-grid{
+grid-template-columns:1fr 1fr;
 }
 
 }
@@ -425,4 +856,41 @@ font-size:24px;
 
 }
 
+.feature-grid,
+.event-grid,
+.report-actions{
+grid-template-columns:1fr;
+}
+
+.panel,
+.leaderboard,
+.badges-section,
+.profile-card{
+padding:20px;
+}
+
+.report-page .report-title{
+align-items:flex-start;
+flex-direction:column;
+}
+
+}
+
+@media print {
+    .navbar,
+    footer,
+    .report-title .btn {
+        display: none !important;
+    }
+
+    body {
+        background: white;
+    }
+
+    .panel,
+    .leaderboard,
+    .stat-card {
+        box-shadow: none;
+        border: 1px solid #e2e8f0;
+    }
 }

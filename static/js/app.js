@@ -1,209 +1,155 @@
-// ==============================
-// Search Leaderboard
-// ==============================
-
-const searchInput = document.getElementById("searchInput");
-
-if (searchInput) {
-
-    searchInput.addEventListener("keyup", function () {
-
-        const filter = this.value.toUpperCase();
-
-        const rows = document.querySelectorAll("#leaderboardTable tbody tr");
-
-        rows.forEach(row => {
-
-            const name = row.cells[1].innerText.toUpperCase();
-
-            row.style.display = name.includes(filter) ? "" : "none";
-
-        });
-
-    });
-
-}
-
-// ==============================
-// Fade In Animation
-// ==============================
-
-window.addEventListener("load", () => {
-
-    document.querySelectorAll(".stat-card, .podium, .leaderboard").forEach((item, index) => {
-
-        item.style.opacity = "0";
-        item.style.transform = "translateY(20px)";
-
-        setTimeout(() => {
-
-            item.style.transition = "all .6s ease";
-            item.style.opacity = "1";
-            item.style.transform = "translateY(0)";
-
-        }, index * 150);
-
-    });
-
-});
-
-// ==============================
-// Auto Refresh Every 30 Seconds
-// ==============================
-
-setInterval(() => {
-
-    console.log("Refreshing leaderboard...");
-
-    location.reload();
-
-}, 30000);
-// ==============================
-// Age Group Filter
-// ==============================
-
-document.querySelectorAll(".filter-btn").forEach(button => {
-
-    button.addEventListener("click", function () {
-
-        const group = this.dataset.group;
-
-        document.querySelectorAll(".filter-btn").forEach(btn => {
-
-            btn.classList.remove("btn-primary");
-            btn.classList.add("btn-outline-primary");
-
-        });
-
-        this.classList.remove("btn-outline-primary");
-        this.classList.add("btn-primary");
-
-        document.querySelectorAll("#leaderboardTable tbody tr").forEach(row => {
-
-            if (group === "all") {
-
-                row.style.display = "";
-
-            } else {
-
-                row.style.display =
-                    row.dataset.group === group ? "" : "none";
-
-            }
-
-        });
-
-    });
-
-});
-
-// ==============================
-// Pagination
-// ==============================
-
 const rowsPerPage = 10;
 let currentPage = 1;
+let activeGroup = "all";
+let activeSearch = "";
 
-function getVisibleRows() {
-    return Array.from(
-        document.querySelectorAll("#leaderboardTable tbody tr")
-    ).filter(row => row.dataset.filter !== "hidden");
+function leaderboardRows() {
+    return Array.from(document.querySelectorAll("#leaderboardTable tbody tr"));
+}
+
+function rowMatches(row) {
+    const name = row.cells[1].innerText.toLowerCase();
+    const groupOk = activeGroup === "all" || row.dataset.group === activeGroup;
+    const searchOk = !activeSearch || name.includes(activeSearch);
+    return groupOk && searchOk;
 }
 
 function showPage(page) {
+    const rows = leaderboardRows();
+    if (!rows.length) return;
 
-    const rows = getVisibleRows();
+    const visibleRows = rows.filter(rowMatches);
+    const totalPages = Math.max(1, Math.ceil(visibleRows.length / rowsPerPage));
+    currentPage = Math.min(Math.max(page, 1), totalPages);
 
-    const totalPages = Math.max(1, Math.ceil(rows.length / rowsPerPage));
+    rows.forEach(row => row.style.display = "none");
+    visibleRows.forEach((row, index) => {
+        const onPage = index >= (currentPage - 1) * rowsPerPage && index < currentPage * rowsPerPage;
+        row.style.display = onPage ? "" : "none";
+    });
 
-    if (page < 1) page = 1;
-    if (page > totalPages) page = totalPages;
+    const pageInfo = document.getElementById("pageInfo");
+    if (pageInfo) pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
+}
 
-    currentPage = page;
+function findMyRank() {
+    const input = document.getElementById("myRankInput");
+    const query = input ? input.value.trim().toLowerCase() : "";
+    if (!query) return;
 
-    document.querySelectorAll("#leaderboardTable tbody tr").forEach(r=>{
-        if(r.dataset.filter==="hidden"){
-            r.style.display="none";
+    let found = null;
+    leaderboardRows().forEach(row => {
+        const link = row.cells[1].querySelector("a");
+        const name = link ? link.innerText.trim() : row.cells[1].innerText.split("\n")[0].trim();
+        if (!found && name.toLowerCase().includes(query)) {
+            found = {
+                name,
+                group: row.dataset.group || "",
+                rankText: row.cells[0].innerText.trim(),
+                points: row.cells[2].innerText.trim()
+            };
         }
     });
 
-    rows.forEach((row,index)=>{
+    const resultEl = document.getElementById("myRankResult");
+    if (!resultEl) return;
 
-        row.style.display =
-            (index >= (page-1)*rowsPerPage &&
-             index < page*rowsPerPage)
-            ? ""
-            : "none";
+    if (!found) {
+        resultEl.style.display = "none";
+        alert("Name not found in the leaderboard. Try a different spelling.");
+        return;
+    }
 
+    const rankNum = parseInt(found.rankText.replace(/\D/g, ""), 10);
+    document.getElementById("mrName").textContent = found.name;
+    document.getElementById("mrGroup").textContent = found.group;
+    document.getElementById("mrPoints").textContent = found.points;
+    document.getElementById("mrRank").textContent = rankNum ? `#${rankNum}` : found.rankText;
+
+    const moveEl = document.getElementById("mrMove");
+    if (rankNum <= 3) {
+        moveEl.textContent = "🔥 Top 3!";
+        moveEl.className = "rank-move up";
+    } else if (rankNum <= 10) {
+        moveEl.textContent = "⬆ Top 10";
+        moveEl.className = "rank-move up";
+    } else {
+        moveEl.textContent = "Keep going!";
+        moveEl.className = "rank-move same";
+    }
+
+    resultEl.style.display = "block";
+    updateBadges(found.name);
+}
+
+function updateBadges(memberName) {
+    let points = 0;
+    leaderboardRows().forEach(row => {
+        const link = row.cells[1].querySelector("a");
+        const name = link ? link.innerText.trim() : "";
+        if (name.toLowerCase() === memberName.toLowerCase()) {
+            points = parseInt(row.cells[2].innerText.trim(), 10) || 0;
+        }
     });
 
-    document.getElementById("pageInfo").innerHTML =
-        "Page " + currentPage + " of " + totalPages;
+    const earned = {
+        prayer: points >= 20,
+        steps: points >= 15,
+        hydration: points >= 25,
+        screen: points >= 10,
+        attendance: points >= 30
+    };
 
+    document.querySelectorAll(".badge-pill[data-badge]").forEach(pill => {
+        const isEarned = earned[pill.dataset.badge];
+        pill.classList.toggle("earned", isEarned);
+        pill.classList.toggle("locked", !isEarned);
+    });
 }
 
-document.getElementById("prevPage").onclick=function(){
-
-    showPage(currentPage-1);
-
-}
-
-document.getElementById("nextPage").onclick=function(){
-
-    showPage(currentPage+1);
-
-}
-
-document.querySelectorAll(".filter-btn").forEach(btn=>{
-
-    btn.addEventListener("click",function(){
-
-        const group=this.dataset.group;
-
-        document.querySelectorAll("#leaderboardTable tbody tr").forEach(row=>{
-
-            if(group==="all"){
-
-                row.dataset.filter="show";
-
-            }else{
-
-                row.dataset.filter =
-                    row.dataset.group===group
-                    ? "show"
-                    : "hidden";
-
-            }
-
+document.addEventListener("DOMContentLoaded", () => {
+    const rankInput = document.getElementById("myRankInput");
+    if (rankInput) {
+        rankInput.addEventListener("keyup", event => {
+            if (event.key === "Enter") findMyRank();
         });
+    }
 
-        currentPage=1;
+    const searchInput = document.getElementById("searchInput");
+    if (searchInput) {
+        searchInput.addEventListener("input", function () {
+            activeSearch = this.value.trim().toLowerCase();
+            showPage(1);
+        });
+    }
 
-        showPage(1);
-
+    document.querySelectorAll(".filter-btn").forEach(button => {
+        button.addEventListener("click", function () {
+            activeGroup = this.dataset.group;
+            document.querySelectorAll(".filter-btn").forEach(btn => {
+                btn.classList.remove("btn-primary");
+                btn.classList.add("btn-outline-primary");
+            });
+            this.classList.remove("btn-outline-primary");
+            this.classList.add("btn-primary");
+            showPage(1);
+        });
     });
 
-});
+    const prev = document.getElementById("prevPage");
+    const next = document.getElementById("nextPage");
+    if (prev) prev.addEventListener("click", () => showPage(currentPage - 1));
+    if (next) next.addEventListener("click", () => showPage(currentPage + 1));
 
-showPage(1);
+    showPage(1);
 
-document.querySelectorAll(".view-profile").forEach(btn => {
-
-    btn.addEventListener("click", function () {
-
-        document.getElementById("profileName").textContent = this.dataset.name;
-        document.getElementById("profileGP").textContent = this.dataset.gp;
-        document.getElementById("profileRank").textContent = this.dataset.rank;
-        document.getElementById("profilePoints").textContent = this.dataset.points;
-
-        document.getElementById("profileSteps").textContent = this.dataset.steps;
-        document.getElementById("profileExercise").textContent = this.dataset.exercise;
-        document.getElementById("profileWater").textContent = this.dataset.water;
-        document.getElementById("profileSleep").textContent = this.dataset.sleep;
-        document.getElementById("profilePrayer").textContent = this.dataset.prayer;
-
-        new bootstrap.Modal(document.getElementById("profileModal")).show();
-
+    document.querySelectorAll(".stat-card, .podium, .leaderboard, .panel").forEach((item, index) => {
+        item.style.opacity = "0";
+        item.style.transform = "translateY(16px)";
+        setTimeout(() => {
+            item.style.transition = "all .45s ease";
+            item.style.opacity = "1";
+            item.style.transform = "translateY(0)";
+        }, index * 70);
     });
-
 });

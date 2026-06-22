@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="report-page">
+    <div class="report-title">
+        <div>
+            <h1>Church Report</h1>
+            <p>{{ church_name }} • Generated {{ generated_at }}</p>
+        </div>
+        <button class="btn btn-primary" onclick="window.print()"><i class="fa-solid fa-print"></i> Print</button>
+    </div>
+
+    <div class="row g-4 mt-2">
+        <div class="col-md-4">
+            <div class="stat-card">
+                <div class="icon">👥</div>
+                <div><h2>{{ total_members }}</h2><span>Members</span></div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-card">
+                <div class="icon">👣</div>
+                <div><h2>{{ "{:,}".format(total_steps) }}</h2><span>Total Steps</span></div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-card">
+                <div class="icon">⭐</div>
+                <div><h2>{{ total_points }}</h2><span>Total Points</span></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="leaderboard mt-4">
+        <h2>Leaderboard Summary</h2>
+        <table class="table align-middle mt-3">
+            <thead>
+            <tr>
+                <th>Rank</th>
+                <th>Name</th>
+                <th>Group</th>
+                <th>Points</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for person in leaderboard %}
+            <tr>
+                <td>{{ person.Rank }}</td>
+                <td>{{ person.Name }}</td>
+                <td>{{ person.Group }}</td>
+                <td>{{ person.Total }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

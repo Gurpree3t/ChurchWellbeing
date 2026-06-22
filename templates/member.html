@@ -3,110 +3,72 @@
 {% block content %}
 
 <div class="container mt-4">
-
-    <div class="card shadow-lg border-0 rounded-4">
-
-        <div class="card-body text-center">
-
-            <div style="font-size:70px;">
-                👤
-            </div>
-
-            <h2 class="mt-3">
-                {{ member_name }}
-            </h2>
-
-            <h3 class="text-primary">
-                ⭐ {{ total_points }} Points
-            </h3>
-
-            <p class="text-muted">
-            {{ submissions }} Submissions
-</p>
-
-<h4 class="text-danger">
-    🔥 {{ streak }} Day Streak
-</h4>
-
+    <div class="profile-card">
+        <div class="profile-photo-wrap">
+            {% if profile_photo %}
+                <img class="profile-photo" src="{{ profile_photo }}" alt="{{ member_name }} profile photo">
+            {% else %}
+                <div class="profile-photo placeholder">👤</div>
+            {% endif %}
         </div>
 
+        <h2 class="mt-3">{{ member_name }}</h2>
+        <h3 class="text-primary">⭐ {{ total_points }} Points</h3>
+        <p class="text-muted">{{ submissions }} Submissions</p>
+        <h4 class="text-danger">🔥 {{ streak }} Day Streak</h4>
+
+        <form class="photo-upload" method="post" action="/member/{{ member_name | urlencode }}/photo" enctype="multipart/form-data">
+            <label class="btn btn-outline-primary">
+                <i class="fa-solid fa-camera"></i> Upload Photo
+                <input type="file" name="profile_photo" accept="image/*" onchange="this.form.submit()">
+            </label>
+        </form>
     </div>
 
     <div class="row mt-4 g-3">
-
         <div class="col-md-6">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    👣 <strong>Steps</strong>
-                    <span class="float-end">{{ total_steps }}</span>
-                </div>
-            </div>
+            <div class="card shadow-sm"><div class="card-body">👣 <strong>Steps</strong><span class="float-end">{{ total_steps }}</span></div></div>
         </div>
-
         <div class="col-md-6">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    💪 <strong>Exercise</strong>
-                    <span class="float-end">{{ exercise }}</span>
-                </div>
-            </div>
+            <div class="card shadow-sm"><div class="card-body">💪 <strong>Exercise</strong><span class="float-end">{{ exercise }}</span></div></div>
         </div>
-
         <div class="col-md-6">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    💧 <strong>Water</strong>
-                    <span class="float-end">{{ water }}</span>
-                </div>
-            </div>
+            <div class="card shadow-sm"><div class="card-body">💧 <strong>Water</strong><span class="float-end">{{ water }}</span></div></div>
         </div>
-
         <div class="col-md-6">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    😴 <strong>Sleep</strong>
-                    <span class="float-end">{{ sleep }}</span>
-                </div>
-            </div>
+            <div class="card shadow-sm"><div class="card-body">😴 <strong>Sleep</strong><span class="float-end">{{ sleep }}</span></div></div>
         </div>
-
         <div class="col-md-6">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    🙏 <strong>Prayer</strong>
-                    <span class="float-end">{{ prayer }}</span>
-                </div>
-            </div>
+            <div class="card shadow-sm"><div class="card-body">🙏 <strong>Prayer</strong><span class="float-end">{{ prayer }}</span></div></div>
         </div>
-
         <div class="col-md-6">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    💻 <strong>Zoom</strong>
-                    <span class="float-end">{{ zoom }}</span>
-                </div>
-            </div>
+            <div class="card shadow-sm"><div class="card-body">💻 <strong>Zoom</strong><span class="float-end">{{ zoom }}</span></div></div>
         </div>
-
         <div class="col-md-6">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    📱 <strong>Screen Time</strong>
-                    <span class="float-end">{{ screen }}</span>
-                </div>
-            </div>
+            <div class="card shadow-sm"><div class="card-body">📱 <strong>Screen Time</strong><span class="float-end">{{ screen }}</span></div></div>
         </div>
+    </div>
 
+    <div class="badges-section mt-4">
+        <h5 class="fw-bold mb-3">🏅 Badges Earned</h5>
+        <div class="badge-grid">
+            {% set prayer_earned = prayer | int >= 5 %}
+            {% set steps_earned = total_steps | int >= 50000 %}
+            {% set hydration_earned = water | int >= 14 %}
+            {% set screen_earned = screen | int >= 5 %}
+            {% set attend_earned = (zoom | int) >= 3 %}
+
+            <span class="badge-pill {{ 'earned' if prayer_earned else 'locked' }}" title="Logged prayer regularly"><span class="badge-icon">🙏</span>Prayer Warrior</span>
+            <span class="badge-pill {{ 'earned' if steps_earned else 'locked' }}" title="Walked 10,000+ steps"><span class="badge-icon">👟</span>10K Steps Club</span>
+            <span class="badge-pill {{ 'earned' if hydration_earned else 'locked' }}" title="Hit water goals"><span class="badge-icon">💧</span>Hydration Hero</span>
+            <span class="badge-pill {{ 'earned' if screen_earned else 'locked' }}" title="Met screen-time limit"><span class="badge-icon">📴</span>Screen-Free Champion</span>
+            <span class="badge-pill {{ 'earned' if attend_earned else 'locked' }}" title="Attended Zoom sessions"><span class="badge-icon">⛪</span>Faithful Attendee</span>
+        </div>
     </div>
 
     <div class="text-center mt-4">
-
-        <a href="/" class="btn btn-primary">
-            ← Back to Leaderboard
-        </a>
-
+        <a href="/" class="btn btn-primary">← Back to Leaderboard</a>
     </div>
-
 </div>
 
 {% endblock %}

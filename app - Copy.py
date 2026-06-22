@@ -218,16 +218,11 @@ def member_profile(name):
     # ==========================
 
     dates = (
-    pd.to_datetime(
-        member[COL_DATE],
-        dayfirst=True,
-        errors="coerce"
-    )
-    .dropna()
-    .dt.normalize()
-    .sort_values()
-    .drop_duplicates()
-    .tolist()
+        pd.to_datetime(member[COL_DATE])
+        .dt.normalize()
+        .sort_values()
+        .drop_duplicates()
+        .tolist()
     )
 
     streak = 0

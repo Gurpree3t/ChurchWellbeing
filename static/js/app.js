@@ -96,3 +96,93 @@ document.querySelectorAll(".filter-btn").forEach(button => {
     });
 
 });
+
+// ==============================
+// Pagination
+// ==============================
+
+const rowsPerPage = 10;
+let currentPage = 1;
+
+function getVisibleRows() {
+    return Array.from(
+        document.querySelectorAll("#leaderboardTable tbody tr")
+    ).filter(row => row.dataset.filter !== "hidden");
+}
+
+function showPage(page) {
+
+    const rows = getVisibleRows();
+
+    const totalPages = Math.max(1, Math.ceil(rows.length / rowsPerPage));
+
+    if (page < 1) page = 1;
+    if (page > totalPages) page = totalPages;
+
+    currentPage = page;
+
+    document.querySelectorAll("#leaderboardTable tbody tr").forEach(r=>{
+        if(r.dataset.filter==="hidden"){
+            r.style.display="none";
+        }
+    });
+
+    rows.forEach((row,index)=>{
+
+        row.style.display =
+            (index >= (page-1)*rowsPerPage &&
+             index < page*rowsPerPage)
+            ? ""
+            : "none";
+
+    });
+
+    document.getElementById("pageInfo").innerHTML =
+        "Page " + currentPage + " of " + totalPages;
+
+}
+
+document.getElementById("prevPage").onclick=function(){
+
+    showPage(currentPage-1);
+
+}
+
+document.getElementById("nextPage").onclick=function(){
+
+    showPage(currentPage+1);
+
+}
+
+document.querySelectorAll(".filter-btn").forEach(btn=>{
+
+    btn.addEventListener("click",function(){
+
+        const group=this.dataset.group;
+
+        document.querySelectorAll("#leaderboardTable tbody tr").forEach(row=>{
+
+            if(group==="all"){
+
+                row.dataset.filter="show";
+
+            }else{
+
+                row.dataset.filter =
+                    row.dataset.group===group
+                    ? "show"
+                    : "hidden";
+
+            }
+
+        });
+
+        currentPage=1;
+
+        showPage(1);
+
+    });
+
+});
+
+showPage(1);

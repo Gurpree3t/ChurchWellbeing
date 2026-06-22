@@ -86,8 +86,6 @@ def calculate_points(row):
 
     screen = str(row.get(COL_SCREEN, "")).strip().lower()
 
-    print("Screen Time Value:", screen)
-
     if "less than 2" in screen:
         screen_points = 10
 

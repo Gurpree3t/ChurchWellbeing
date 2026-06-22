@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="card shadow-lg border-0 rounded-4">
+
+        <div class="card-body text-center">
+
+            <div style="font-size:70px;">
+                👤
+            </div>
+
+            <h2 class="mt-3">
+                {{ member_name }}
+            </h2>
+
+            <h3 class="text-primary">
+                ⭐ {{ total_points }} Points
+            </h3>
+
+            <p class="text-muted">
+            {{ submissions }} Submissions
+</p>
+
+<h4 class="text-danger">
+    🔥 {{ streak }} Day Streak
+</h4>
+
+        </div>
+
+    </div>
+
+    <div class="row mt-4 g-3">
+
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    👣 <strong>Steps</strong>
+                    <span class="float-end">{{ total_steps }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    💪 <strong>Exercise</strong>
+                    <span class="float-end">{{ exercise }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    💧 <strong>Water</strong>
+                    <span class="float-end">{{ water }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    😴 <strong>Sleep</strong>
+                    <span class="float-end">{{ sleep }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    🙏 <strong>Prayer</strong>
+                    <span class="float-end">{{ prayer }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    💻 <strong>Zoom</strong>
+                    <span class="float-end">{{ zoom }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    📱 <strong>Screen Time</strong>
+                    <span class="float-end">{{ screen }}</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="text-center mt-4">
+
+        <a href="/" class="btn btn-primary">
+            ← Back to Leaderboard
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %}

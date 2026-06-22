@@ -224,10 +224,17 @@
             </td>
 
             <td>
-                {{ person.Name }}
-                 <br>
-                 <small class="text-muted">{{ person.Group }}</small>
-            </td>
+    <a href="/member/{{ person.Name | urlencode }}"
+       class="text-decoration-none fw-bold text-dark">
+        {{ person.Name }}
+    </a>
+
+    <br>
+
+    <small class="text-muted">
+        {{ person.Group }}
+    </small>
+</td>
 			<td>
     <strong>{{ person.Total }}</strong>
 </td>

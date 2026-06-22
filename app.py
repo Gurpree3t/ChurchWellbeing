@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, abort
 from datetime import datetime
 import pandas as pd
 
@@ -106,18 +106,18 @@ def dashboard():
         inplace=True
     )
     group_map = (
-    df[[COL_NAME, "Age Group"]]
-    .drop_duplicates()
-    .rename(columns={
-        COL_NAME: "Name",
-        "Age Group": "Group"
-    })
+        df[[COL_NAME, "Age Group"]]
+        .drop_duplicates()
+        .rename(columns={
+            COL_NAME: "Name",
+            "Age Group": "Group"
+        })
     )
 
     leaderboard = leaderboard.merge(
-    group_map,
-    on="Name",
-    how="left"
+        group_map,
+        on="Name",
+        how="left"
     )
 
     # ==========================
@@ -156,33 +156,102 @@ def dashboard():
     # ==========================
     # Render Page
     # ==========================
-
     return render_template(
         "dashboard.html",
-
         leaderboard=leaderboard.to_dict("records"),
-
         top3=top3.to_dict("records"),
-
         under18=under18.to_dict("records"),
-
         adults=adults.to_dict("records"),
-
         seniors=seniors.to_dict("records"),
-
         total_members=stats["members"],
-
         total_steps=stats["steps"],
-
         total_points=total_points,
-
         last_updated=last_updated,
-
         app_name=APP_NAME,
-
         church_name=CHURCH_NAME
     )
 
+@app.route("/member/<name>")
+def member_profile(name):
+    
+    # ==========================
+    # Load Google Sheet
+    # ==========================
+    
+    df = load_google_sheet()
+
+    df.columns = df.columns.str.strip()
+
+    # ==========================
+    # Standardize Names
+    # ==========================
+
+    df[COL_NAME] = (
+        df[COL_NAME]
+        .astype(str)
+        .str.upper()
+        .str.strip()
+    )
+
+    name = name.upper().strip()
+
+    member = df[df[COL_NAME] == name]
+
+    if member.empty:
+        abort(404)
+
+    member[
+        [
+            "Steps Points",
+            "Exercise Points",
+            "Water Points",
+            "Sleep Points",
+            "Prayer Points",
+            "Zoom Points",
+            "Screen Time Points",
+            "Total"
+        ]
+    ] = member.apply(calculate_points, axis=1)
+    
+    # ==========================
+    # Daily Streak
+    # ==========================
+
+    dates = (
+        pd.to_datetime(member[COL_DATE])
+        .dt.normalize()
+        .sort_values()
+        .drop_duplicates()
+        .tolist()
+    )
+
+    streak = 0
+
+    if dates:
+
+        today = pd.Timestamp.now().normalize()
+
+        if dates[-1] < today:
+            today -= pd.Timedelta(days=1)
+
+        while today in dates:
+            streak += 1
+            today -= pd.Timedelta(days=1)
+
+    return render_template(
+        "member.html",
+        member_name=name,
+        total_points=int(member["Total"].sum()),
+        streak=streak,
+        total_steps=int(member["Steps Points"].sum()),
+        exercise=int(member["Exercise Points"].sum()),
+        water=int(member["Water Points"].sum()),
+        sleep=int(member["Sleep Points"].sum()),
+        prayer=int(member["Prayer Points"].sum()),
+        zoom=int(member["Zoom Points"].sum()),
+        screen=int(member["Screen Time Points"].sum()),
+        submissions=len(member)
+    )
 
 if __name__ == "__main__":
     app.run(debug=True)

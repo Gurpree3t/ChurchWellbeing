@@ -186,3 +186,24 @@ document.querySelectorAll(".filter-btn").forEach(btn=>{
 });
 
 showPage(1);
+
+document.querySelectorAll(".view-profile").forEach(btn => {
+
+    btn.addEventListener("click", function () {
+
+        document.getElementById("profileName").textContent = this.dataset.name;
+        document.getElementById("profileGP").textContent = this.dataset.gp;
+        document.getElementById("profileRank").textContent = this.dataset.rank;
+        document.getElementById("profilePoints").textContent = this.dataset.points;
+
+        document.getElementById("profileSteps").textContent = this.dataset.steps;
+        document.getElementById("profileExercise").textContent = this.dataset.exercise;
+        document.getElementById("profileWater").textContent = this.dataset.water;
+        document.getElementById("profileSleep").textContent = this.dataset.sleep;
+        document.getElementById("profilePrayer").textContent = this.dataset.prayer;
+
+        new bootstrap.Modal(document.getElementById("profileModal")).show();
+
+    });
+
+});

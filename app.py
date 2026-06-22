@@ -10,6 +10,25 @@ from services.statistics import church_statistics
 
 app = Flask(__name__)
 
+# ==========================
+# Age Group Function
+# ==========================
+
+def get_age_group(age):
+
+    try:
+        age = int(age)
+    except:
+        return "Unknown"
+
+    if age < 18:
+        return "Under 18"
+
+    elif age <= 40:
+        return "18-40"
+
+    else:
+        return "40+"
 
 @app.route("/")
 def dashboard():
@@ -20,6 +39,11 @@ def dashboard():
 
     df = load_google_sheet()
 
+    df.columns = df.columns.str.strip()
+
+    df["Age Group"] = df[COL_AGE].apply(get_age_group)
+
+   
     # ==========================
     # Standardize Names
     # ==========================
@@ -42,6 +66,8 @@ def dashboard():
             "Water Points",
             "Sleep Points",
             "Prayer Points",
+            "Zoom Points",
+            "Screen Time Points",
             "Total"
         ]
     ] = df.apply(calculate_points, axis=1)
@@ -79,6 +105,20 @@ def dashboard():
         },
         inplace=True
     )
+    group_map = (
+    df[[COL_NAME, "Age Group"]]
+    .drop_duplicates()
+    .rename(columns={
+        COL_NAME: "Name",
+        "Age Group": "Group"
+    })
+    )
+
+    leaderboard = leaderboard.merge(
+    group_map,
+    on="Name",
+    how="left"
+    )
 
     # ==========================
     # Dashboard Statistics
@@ -88,6 +128,27 @@ def dashboard():
 
     top3 = leaderboard.head(3)
 
+    # ==========================
+    # Group Leaderboards
+    # ==========================
+
+    under18 = leaderboard[
+        leaderboard["Name"].isin(
+            df[df["Age Group"] == "Under 18"][COL_NAME].unique()
+        )
+    ]
+
+    adults = leaderboard[
+        leaderboard["Name"].isin(
+            df[df["Age Group"] == "18-40"][COL_NAME].unique()
+        )
+    ]
+
+    seniors = leaderboard[
+        leaderboard["Name"].isin(
+            df[df["Age Group"] == "40+"][COL_NAME].unique()
+        )
+    ]
     total_points = int(leaderboard["Total"].sum())
 
     last_updated = datetime.now().strftime("%d %b %Y %I:%M:%S %p")
@@ -102,6 +163,12 @@ def dashboard():
         leaderboard=leaderboard.to_dict("records"),
 
         top3=top3.to_dict("records"),
+
+        under18=under18.to_dict("records"),
+
+        adults=adults.to_dict("records"),
+
+        seniors=seniors.to_dict("records"),
 
         total_members=stats["members"],
 

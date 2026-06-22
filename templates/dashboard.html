@@ -164,7 +164,29 @@
     >
 
 </div>
+<div class="mb-3">
 
+    <button class="btn btn-primary btn-sm filter-btn"
+            data-group="all">
+        🏆 Overall
+    </button>
+
+    <button class="btn btn-outline-primary btn-sm filter-btn"
+            data-group="Under 18">
+        👦 Under 18
+    </button>
+
+    <button class="btn btn-outline-primary btn-sm filter-btn"
+            data-group="18-40">
+        👨 18-40
+    </button>
+
+    <button class="btn btn-outline-primary btn-sm filter-btn"
+            data-group="40+">
+        👴 40+
+    </button>
+
+</div>
     <table class="table align-middle" id="leaderboardTable">
 
         <thead>
@@ -185,9 +207,9 @@
 
         {% for person in leaderboard %}
 
-        <tr>
+        <tr data-group="{{ person.Group }}">
 
-            <td>
+                    <td>
 
                 {% if person.Rank == 1 %}
                     🥇
@@ -201,13 +223,14 @@
 
             </td>
 
-            <td>{{ person.Name }}</td>
-
             <td>
-
-                <strong>{{ person.Total }}</strong>
-
+                {{ person.Name }}
+                 <br>
+                 <small class="text-muted">{{ person.Group }}</small>
             </td>
+			<td>
+    <strong>{{ person.Total }}</strong>
+</td>
 
         </tr>
 

@@ -1,6 +1,6 @@
 # ==========================================
 # Church Wellbeing Configuration
-# Version : 1.0
+# Version : 1.1
 # ==========================================
 
 # -------------------------------
@@ -18,7 +18,9 @@ GOOGLE_SHEET_URL = (
 # -------------------------------
 
 COL_NAME = "Full Name"
+
 COL_AGE = "Age"
+
 COL_DATE = "Date & Time"
 
 COL_STEPS = "How many steps did you complete today?"
@@ -30,6 +32,12 @@ COL_WATER = "Water Intake ? (Glasses)"
 COL_SLEEP = "Sleep Duration ? (Hours)"
 
 COL_PRAYER = "Have You Completed Today's Prayer?"
+
+# NEW
+
+COL_ZOOM = "Did you attend today's Zoom Fellowship?"
+
+COL_SCREEN = "What was your total screen time today?"
 
 # -------------------------------
 # Point System
@@ -57,12 +65,28 @@ SLEEP_POINTS = 1
 PRAYER_POINTS = 5
 
 # -------------------------------
+# Zoom Attendance
+# -------------------------------
+
+ZOOM_POINTS = 15
+
+# -------------------------------
+# Screen Time
+# -------------------------------
+
+SCREEN_TIME_POINTS = {
+    "Less than 2 hours": 10,
+    "2 to 3 hours": 5,
+    "More than 3 hours": 0
+}
+
+# -------------------------------
 # Application
 # -------------------------------
 
 APP_NAME = "Church Wellbeing"
 
-APP_VERSION = "1.0"
+APP_VERSION = "1.1"
 
 CHURCH_NAME = "Hindi Christian Fellowship"
 

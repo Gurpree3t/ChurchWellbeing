@@ -72,12 +72,46 @@ def calculate_points(row):
 
     prayer_points = 5 if prayer == "yes" else 0
 
+    # -------------------
+    # Zoom Meeting
+    # -------------------
+
+    zoom = str(row.get(COL_ZOOM, "")).strip().lower()
+
+    zoom_points = ZOOM_POINTS if zoom == "yes" else 0
+
+    # -------------------
+    # Screen Time
+    # -------------------
+
+    screen = str(row.get(COL_SCREEN, "")).strip().lower()
+
+    print("Screen Time Value:", screen)
+
+    if "less than 2" in screen:
+        screen_points = 10
+
+    elif "2 to 3" in screen:
+        screen_points = 5
+
+    elif "more than 3" in screen:
+        screen_points = 0
+
+    else:
+        screen_points = 0
+
+    # -------------------
+    # Total
+    # -------------------
+
     total = (
         step_points
         + exercise_points
         + water_points
         + sleep_points
         + prayer_points
+        + zoom_points
+        + screen_points
     )
 
     return pd.Series([
@@ -86,5 +120,7 @@ def calculate_points(row):
         water_points,
         sleep_points,
         prayer_points,
+        zoom_points,
+        screen_points,
         total
     ])
